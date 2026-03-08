@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Debug</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        
+        .debug-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .profile-image {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            margin: 20px auto;
+            border: 2px solid #ddd;
+        }
+
+        .profile-image:hover {
+            transform: scale(1.05);
+            border: 3px solid #667eea;
+        }
+
+        .profile-image img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .profile-image .profile-default {
+            opacity: 1 !important;
+            z-index: 1;
+            display: block;
+        }
+
+        .profile-image .profile-hover {
+            opacity: 0 !important;
+            z-index: 2;
+            display: block;
+        }
+
+        .profile-image:hover .profile-hover {
+            opacity: 1 !important;
+        }
+
+        .profile-image:hover .profile-default {
+            opacity: 0 !important;
+        }
+
+        .profile-image:not(:hover) .profile-default {
+            opacity: 1 !important;
+        }
+
+        .profile-image:not(:hover) .profile-hover {
+            opacity: 0 !important;
+        }
+        
+        .status {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body>
+    <div class="debug-container">
+        <h1>Profile Image Debug Test</h1>
+        
+        <div id="status"></div>
+        
+        <div class="profile-image">
+            <img class="profile-default" src="assets/Screenshot_20250202_164718_Photo Editor.jpg" alt="Profile"
+                 onload="updateStatus('Default image loaded successfully', 'success')"
+                 onerror="updateStatus('Default image failed to load', 'error')">
+            <img class="profile-hover" src="assets/Screenshot_20250421_112742_Gallery.jpg" alt="Profile alternate"
+                 onload="updateStatus('Hover image loaded successfully', 'success')"
+                 onerror="updateStatus('Hover image failed to load', 'error')">
+        </div>
+        
+        <p><strong>Instructions:</strong></p>
+        <ul>
+            <li>You should see the first image (Photo Editor) by default</li>
+            <li>When you hover over the image, it should fade to the second image (Gallery)</li>
+            <li>When you stop hovering, it should fade back to the first image</li>
+        </ul>
+        
+        <div id="image-info"></div>
+    </div>
+
+    <script>
+        function updateStatus(message, type) {
+            const statusDiv = document.getElementById('status');
+            const newStatus = document.createElement('div');
+            newStatus.className = `status ${type}`;
+            newStatus.textContent = message;
+            statusDiv.appendChild(newStatus);
+        }
+        
+        // Check image dimensions when loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            const defaultImg = document.querySelector('.profile-default');
+            const hoverImg = document.querySelector('.profile-hover');
+            
+            setTimeout(() => {
+                const info = document.getElementById('image-info');
+                info.innerHTML = `
+                    <h3>Image Information:</h3>
+                    <p><strong>Default Image:</strong> ${defaultImg.naturalWidth}x${defaultImg.naturalHeight}px</p>
+                    <p><strong>Hover Image:</strong> ${hoverImg.naturalWidth}x${hoverImg.naturalHeight}px</p>
+                    <p><strong>Default Image Visible:</strong> ${getComputedStyle(defaultImg).opacity}</p>
+                    <p><strong>Hover Image Visible:</strong> ${getComputedStyle(hoverImg).opacity}</p>
+                `;
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
+
+
+
